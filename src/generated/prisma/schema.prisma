@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  FACULTY
+  PRINCIPAL
+}
+
+enum VenueType {
+  AUDI
+  OTHER
+}
+
+enum RequestStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+}
+
+enum RuleKind {
+  UPLOAD
+  SIGNATURE
+}
+
+enum RequirementStatus {
+  NOT_UPLOADED
+  UPLOADED
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+model Faculty {
+  id                 String               @id @default(cuid())
+  name               String
+  role               Role                 @default(FACULTY)
+  clubs              Club[]
+  signedRequirements RequestRequirement[]
+}
+
+model Club {
+  id                String         @id @default(cuid())
+  name              String
+  facultyInChargeId String
+  facultyInCharge   Faculty        @relation(fields: [facultyInChargeId], references: [id])
+  requests          EventRequest[]
+}
+
+model Venue {
+  id       String         @id @default(cuid())
+  name     String
+  type     VenueType
+  capacity Int
+  requests EventRequest[]
+}
+
+model EventRequest {
+  id               String               @id @default(cuid())
+  clubId           String
+  club             Club                 @relation(fields: [clubId], references: [id])
+  eventName        String
+  venueId          String
+  venue            Venue                @relation(fields: [venueId], references: [id])
+  startTime        DateTime
+  endTime          DateTime
+  footfall         Int
+  hasExternalGuest Boolean              @default(false)
+  equipment        String[]
+  status           RequestStatus        @default(PENDING)
+  createdAt        DateTime             @default(now())
+  requirements     RequestRequirement[]
+}
+
+model DocRule {
+  id            String               @id @default(cuid())
+  label         String
+  kind          RuleKind
+  minFootfall   Int?
+  requiresGuest Boolean              @default(false)
+  audiOnly      Boolean              @default(false)
+  signerRole    Role?
+  requirements  RequestRequirement[]
+}
+
+model RequestRequirement {
+  id             String            @id @default(cuid())
+  eventRequestId String
+  eventRequest   EventRequest      @relation(fields: [eventRequestId], references: [id])
+  docRuleId      String
+  docRule        DocRule           @relation(fields: [docRuleId], references: [id])
+  status         RequirementStatus @default(NOT_UPLOADED)
+  fileUrl        String?
+  signedById     String?
+  signedBy       Faculty?          @relation(fields: [signedById], references: [id])
+  updatedAt      DateTime          @updatedAt
+}
