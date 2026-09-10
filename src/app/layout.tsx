@@ -28,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/requests" className="text-[13px] font-medium text-[#425466] hover:text-[#0A2540] transition-colors">Requests</Link>
               <Link href="/calendar" className="text-[13px] font-medium text-[#425466] hover:text-[#0A2540] transition-colors">Calendar</Link>
               <Link href="/approvals" className="text-[13px] font-medium text-[#425466] hover:text-[#0A2540] transition-colors">Approvals</Link>
+              <Link href="/roadmap" className="text-[13px] font-medium text-[#425466] hover:text-[#0A2540] transition-colors">Roadmap</Link>
             </div>
           </div>
           <Link href="/requests/new">
