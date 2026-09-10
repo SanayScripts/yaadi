@@ -15,10 +15,10 @@ export default async function ApprovalsPage() {
   ]);
 
   return (
-    <div className="max-w-3xl mx-auto py-10 px-6">
+    <div className="max-w-3xl mx-auto py-12 px-6">
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-neutral-900">Approvals</h1>
-        <p className="text-sm text-neutral-500">Digitally forwarded sign-off requests. Approve/reject click stands in for the real signature — that piece is roadmap.</p>
+        <h1 className="text-[28px] font-semibold text-[#0A2540] tracking-tight">Approvals</h1>
+        <p className="text-sm text-[#6B7C93] mt-1">Digitally forwarded sign-off requests. Approve/reject stands in for the real signature — that piece is roadmap.</p>
       </div>
       <ApprovalsView
         faculty={faculty}

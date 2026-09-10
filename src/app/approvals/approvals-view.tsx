@@ -48,7 +48,7 @@ export function ApprovalsView({ faculty, requirements }: { faculty: Faculty[]; r
     <div className="space-y-6">
       <div className="max-w-xs">
         <Select value={facultyId} onValueChange={setFacultyId}>
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full bg-white">
             <SelectValue placeholder="I am...">
               {selectedFaculty ? `${selectedFaculty.name}${selectedFaculty.role === "PRINCIPAL" ? " (Principal)" : ""}` : "I am..."}
             </SelectValue>
@@ -62,32 +62,32 @@ export function ApprovalsView({ faculty, requirements }: { faculty: Faculty[]; r
       </div>
 
       {!selectedFaculty && (
-        <p className="text-sm text-neutral-400 border border-dashed border-neutral-200 rounded-lg px-4 py-6 text-center">
+        <p className="text-sm text-[#6B7C93] border border-dashed border-[#E3E8EE] rounded-lg px-4 py-8 text-center">
           Select who you are to see items awaiting your sign-off.
         </p>
       )}
 
       {selectedFaculty && visible.length === 0 && (
-        <p className="text-sm text-neutral-400 border border-dashed border-neutral-200 rounded-lg px-4 py-6 text-center">
+        <p className="text-sm text-[#6B7C93] border border-dashed border-[#E3E8EE] rounded-lg px-4 py-8 text-center">
           Nothing pending your approval.
         </p>
       )}
 
-      <div className="border border-neutral-200 rounded-lg divide-y divide-neutral-100 bg-white">
+      <div className="border border-[#E3E8EE] rounded-lg divide-y divide-[#E3E8EE] bg-white shadow-sm overflow-hidden">
         {visible.map((r) => (
-          <div key={r.id} className="px-4 py-3.5 flex items-center justify-between gap-4">
+          <div key={r.id} className="px-5 py-4 flex items-center justify-between gap-4">
             <div>
-              <Link href="#" className="text-sm font-medium text-neutral-900 hover:text-indigo-600">{r.eventName}</Link>
-              <p className="text-xs text-neutral-500 mt-0.5">
+              <Link href="#" className="text-sm font-medium text-[#0A2540] hover:text-[#635BFF] transition-colors">{r.eventName}</Link>
+              <p className="text-xs text-[#6B7C93] mt-0.5">
                 {r.clubName} · {r.venue} · {new Date(r.startTime).toLocaleString([], { dateStyle: "medium", timeStyle: "short" })}
               </p>
-              <p className="text-xs text-neutral-400 mt-0.5">{r.label}</p>
+              <p className="text-xs text-[#8A98AC] mt-0.5">{r.label}</p>
             </div>
             <div className="flex gap-2 shrink-0">
-              <Button size="sm" variant="outline" disabled={pending} onClick={() => handleDecision(r.id, "REJECTED")}>
+              <Button size="sm" variant="outline" className="border-[#E3E8EE]" disabled={pending} onClick={() => handleDecision(r.id, "REJECTED")}>
                 Reject
               </Button>
-              <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700" disabled={pending} onClick={() => handleDecision(r.id, "VERIFIED")}>
+              <Button size="sm" className="bg-[#635BFF] hover:bg-[#5147E0] text-white" disabled={pending} onClick={() => handleDecision(r.id, "VERIFIED")}>
                 Approve
               </Button>
             </div>

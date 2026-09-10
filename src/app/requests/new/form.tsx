@@ -223,7 +223,7 @@ export function NewRequestForm({ clubs, venues, docRules }: { clubs: Club[]; ven
         </div>
       )}
 
-      <Button type="submit" disabled={pending || !clubId || !venueId || !startTime || !endTime} className="bg-indigo-600 hover:bg-indigo-700">
+      <Button type="submit" disabled={pending || !clubId || !venueId || !startTime || !endTime} className="bg-[#635BFF] hover:bg-[#5147E0]">
         {pending ? "Submitting..." : "Submit Request"}
       </Button>
     </form>

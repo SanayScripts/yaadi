@@ -1,12 +1,11 @@
 "use client";
 
 import { useState, useEffect, useTransition } from "react";
-import { getClashesForSlot } from "@/app/requests/actions";
 import { cn } from "@/lib/utils";
 
 type Booking = { id: string; eventName: string; club: string; startTime: string; endTime: string };
 
-const HOURS = Array.from({ length: 14 }, (_, i) => i + 8); // 8am - 9pm
+const HOURS = Array.from({ length: 14 }, (_, i) => i + 8);
 
 export function SlotGrid({
   venueId,
@@ -73,7 +72,7 @@ export function SlotGrid({
   }
 
   return (
-    <div className="border border-neutral-200 rounded-lg overflow-hidden">
+    <div className="border border-[#E3E8EE] rounded-lg overflow-hidden shadow-sm">
       {HOURS.map((hour) => {
         const booked = isBooked(hour);
         const booking = bookingAt(hour);
@@ -85,10 +84,10 @@ export function SlotGrid({
             disabled={booked}
             onClick={() => handleClick(hour)}
             className={cn(
-              "w-full flex items-center justify-between px-4 py-2.5 text-sm border-b border-neutral-100 last:border-b-0 transition-colors",
-              booked && "bg-neutral-50 text-neutral-400 cursor-not-allowed",
-              !booked && !selected && "hover:bg-indigo-50 cursor-pointer text-neutral-700",
-              selected && "bg-indigo-600 text-white hover:bg-indigo-600"
+              "w-full flex items-center justify-between px-4 py-2.5 text-sm border-b border-[#F0F3F8] last:border-b-0 transition-colors",
+              booked && "bg-[#F6F9FC] text-[#8A98AC] cursor-not-allowed",
+              !booked && !selected && "hover:bg-[#F5F4FF] cursor-pointer text-[#425466]",
+              selected && "bg-[#635BFF] text-white hover:bg-[#635BFF]"
             )}
           >
             <span>{hour % 12 === 0 ? 12 : hour % 12}:00 {hour < 12 ? "AM" : "PM"}</span>

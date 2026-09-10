@@ -11,10 +11,10 @@ export default async function CalendarPage() {
   ]);
 
   return (
-    <div className="max-w-6xl mx-auto py-10 px-6">
+    <div className="max-w-6xl mx-auto py-12 px-6">
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-neutral-900">Master Calendar</h1>
-        <p className="text-sm text-neutral-500">All bookings across every venue, read-only.</p>
+        <h1 className="text-[28px] font-semibold text-[#0A2540] tracking-tight">Master Calendar</h1>
+        <p className="text-sm text-[#6B7C93] mt-1">All bookings across every venue, read-only.</p>
       </div>
       <CalendarView
         requests={requests.map((r) => ({
