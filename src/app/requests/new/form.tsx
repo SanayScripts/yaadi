@@ -36,8 +36,8 @@ function timeOptions() {
 }
 const TIME_OPTIONS = timeOptions();
 
-export function NewRequestForm({ clubs, venues, docRules }: { clubs: Club[]; venues: Venue[]; docRules: DocRule[] }) {
-  const [clubId, setClubId] = useState("");
+export function NewRequestForm({ clubs, venues, docRules, lockedClub }: { clubs: Club[]; venues: Venue[]; docRules: DocRule[]; lockedClub?: { id: string; name: string } | null }) {
+  const [clubId, setClubId] = useState(lockedClub?.id ?? "");
   const [venueId, setVenueId] = useState("");
   const [date, setDate] = useState("");
   const [startTimeOfDay, setStartTimeOfDay] = useState("");
@@ -88,16 +88,22 @@ export function NewRequestForm({ clubs, venues, docRules }: { clubs: Club[]; ven
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <Label>Club</Label>
-          <Select value={clubId} onValueChange={setClubId} required>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select club">
-                {selectedClub?.name ?? "Select club"}
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {clubs.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
-            </SelectContent>
-          </Select>
+          {lockedClub ? (
+            <div className="w-full rounded-lg border border-[#E3E8EE] bg-[#F6F9FC] px-3 py-2 text-sm text-[#0A2540]">
+              {lockedClub.name} <span className="text-[#8A98AC] text-xs">(your club)</span>
+            </div>
+          ) : (
+            <Select value={clubId} onValueChange={setClubId} required>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select club">
+                  {selectedClub?.name ?? "Select club"}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {clubs.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          )}
         </div>
 
         <div className="space-y-1.5">
