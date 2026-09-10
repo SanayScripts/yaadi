@@ -29,6 +29,7 @@ export function NewRequestForm({ clubs, venues }: { clubs: Club[]; venues: Venue
 
   const selectedVenue = venues.find((v) => v.id === venueId);
   const isAudi = selectedVenue?.type === "AUDI";
+  const selectedClub = clubs.find((c) => c.id === clubId);
 
   useEffect(() => {
     setStartTime("");
@@ -55,7 +56,11 @@ export function NewRequestForm({ clubs, venues }: { clubs: Club[]; venues: Venue
         <div className="space-y-1.5">
           <Label>Club</Label>
           <Select value={clubId} onValueChange={setClubId} required>
-            <SelectTrigger><SelectValue placeholder="Select club" /></SelectTrigger>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select club">
+                {selectedClub?.name ?? "Select club"}
+              </SelectValue>
+            </SelectTrigger>
             <SelectContent>
               {clubs.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
             </SelectContent>
@@ -71,7 +76,11 @@ export function NewRequestForm({ clubs, venues }: { clubs: Club[]; venues: Venue
       <div className="space-y-1.5">
         <Label>Venue</Label>
         <Select value={venueId} onValueChange={setVenueId} required>
-          <SelectTrigger><SelectValue placeholder="Select venue" /></SelectTrigger>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select venue">
+              {selectedVenue ? `${selectedVenue.name}${selectedVenue.type === "AUDI" ? " (Auditorium)" : ""} — cap ${selectedVenue.capacity}` : "Select venue"}
+            </SelectValue>
+          </SelectTrigger>
           <SelectContent>
             {venues.map((v) => (
               <SelectItem key={v.id} value={v.id}>
