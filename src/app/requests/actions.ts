@@ -18,7 +18,6 @@ export async function createEventRequest(formData: FormData) {
   const equipment = equipmentRaw.split(",").map((e) => e.trim()).filter(Boolean);
 
   const venue = await db.venue.findUniqueOrThrow({ where: { id: venueId } });
-
   const clashes = await findClashes(venueId, startTime, endTime);
 
   if (venue.type === "AUDI" && clashes.length > 0) {
@@ -28,17 +27,7 @@ export async function createEventRequest(formData: FormData) {
   const status = venue.type === "AUDI" ? "CONFIRMED" : "PENDING";
 
   const request = await db.eventRequest.create({
-    data: {
-      clubId,
-      eventName,
-      venueId,
-      startTime,
-      endTime,
-      footfall,
-      hasExternalGuest,
-      equipment,
-      status,
-    },
+    data: { clubId, eventName, venueId, startTime, endTime, footfall, hasExternalGuest, equipment, status },
   });
 
   const allRules = await db.docRule.findMany();
@@ -74,5 +63,14 @@ export async function uploadRequirementFile(requirementId: string, fileName: str
     where: { id: requirementId },
     data: { status: "UPLOADED", fileUrl: fileName },
   });
+  revalidatePath("/requests/[id]", "page");
+}
+
+export async function decideRequirement(requirementId: string, facultyId: string, decision: "VERIFIED" | "REJECTED") {
+  await db.requestRequirement.update({
+    where: { id: requirementId },
+    data: { status: decision, signedById: facultyId },
+  });
+  revalidatePath("/approvals");
   revalidatePath("/requests/[id]", "page");
 }
