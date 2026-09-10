@@ -19,6 +19,7 @@ type Club = { id: string; name: string };
 type Venue = { id: string; name: string; type: "AUDI" | "OTHER"; capacity: number };
 
 export function NewRequestForm({ clubs, venues }: { clubs: Club[]; venues: Venue[] }) {
+  const [clubId, setClubId] = useState("");
   const [venueId, setVenueId] = useState("");
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
@@ -37,6 +38,8 @@ export function NewRequestForm({ clubs, venues }: { clubs: Club[]; venues: Venue
   async function handleSubmit(formData: FormData) {
     setError("");
     setPending(true);
+    formData.set("clubId", clubId);
+    formData.set("venueId", venueId);
     formData.set("startTime", startTime);
     formData.set("endTime", endTime);
     const res = await createEventRequest(formData);
@@ -51,13 +54,12 @@ export function NewRequestForm({ clubs, venues }: { clubs: Club[]; venues: Venue
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <Label>Club</Label>
-          <Select name="clubId" required onValueChange={() => {}}>
+          <Select value={clubId} onValueChange={setClubId} required>
             <SelectTrigger><SelectValue placeholder="Select club" /></SelectTrigger>
             <SelectContent>
               {clubs.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
             </SelectContent>
           </Select>
-          <input type="hidden" name="clubId" />
         </div>
 
         <div className="space-y-1.5">
@@ -78,7 +80,6 @@ export function NewRequestForm({ clubs, venues }: { clubs: Club[]; venues: Venue
             ))}
           </SelectContent>
         </Select>
-        <input type="hidden" name="venueId" value={venueId} />
       </div>
 
       {isAudi ? (
@@ -136,7 +137,7 @@ export function NewRequestForm({ clubs, venues }: { clubs: Club[]; venues: Venue
         </div>
       )}
 
-      <Button type="submit" disabled={pending || !venueId || !startTime || !endTime} className="bg-indigo-600 hover:bg-indigo-700">
+      <Button type="submit" disabled={pending || !clubId || !venueId || !startTime || !endTime} className="bg-indigo-600 hover:bg-indigo-700">
         {pending ? "Submitting..." : "Submit Request"}
       </Button>
     </form>
