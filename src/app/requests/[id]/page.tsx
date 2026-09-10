@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
+import { RequirementItem } from "./requirement-item";
 
 const statusColor: Record<string, string> = {
   CONFIRMED: "bg-emerald-100 text-emerald-700 hover:bg-emerald-100",
@@ -12,7 +13,11 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
   const { id } = await params;
   const request = await db.eventRequest.findUnique({
     where: { id },
-    include: { club: { include: { facultyInCharge: true } }, venue: true, requirements: { include: { docRule: true, signedBy: true } } },
+    include: {
+      club: { include: { facultyInCharge: true } },
+      venue: true,
+      requirements: { include: { docRule: true, signedBy: true } },
+    },
   });
 
   if (!request) notFound();
@@ -55,13 +60,10 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
       <h2 className="text-sm font-semibold text-neutral-900 mb-3">Requirements</h2>
       <div className="border border-neutral-200 rounded-lg divide-y divide-neutral-100 bg-white">
         {request.requirements.length === 0 && (
-          <p className="text-sm text-neutral-500 px-4 py-6 text-center">No requirements attached yet — checklist engine lands in Batch 2.</p>
+          <p className="text-sm text-neutral-500 px-4 py-6 text-center">No documents required for this event.</p>
         )}
         {request.requirements.map((req) => (
-          <div key={req.id} className="px-4 py-3 flex justify-between text-sm">
-            <span className="text-neutral-700">{req.docRule.label}</span>
-            <span className="text-neutral-500">{req.status}</span>
-          </div>
+          <RequirementItem key={req.id} req={req} />
         ))}
       </div>
     </div>

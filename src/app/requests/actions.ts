@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { findClashes } from "@/lib/clash";
+import { evaluateRules } from "@/lib/rules";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -40,7 +41,23 @@ export async function createEventRequest(formData: FormData) {
     },
   });
 
-  // Batch 2 will populate requirements here via a shared rule-evaluation function.
+  const allRules = await db.docRule.findMany();
+  const matchedRules = evaluateRules(allRules, {
+    footfall,
+    hasExternalGuest,
+    isAudi: venue.type === "AUDI",
+    hasEquipment: equipment.length > 0,
+  });
+
+  if (matchedRules.length > 0) {
+    await db.requestRequirement.createMany({
+      data: matchedRules.map((rule) => ({
+        eventRequestId: request.id,
+        docRuleId: rule.id,
+        status: rule.kind === "SIGNATURE" ? "PENDING" : "NOT_UPLOADED",
+      })),
+    });
+  }
 
   revalidatePath("/requests");
   redirect(`/requests/${request.id}`);
@@ -50,4 +67,12 @@ export async function getClashesForSlot(venueId: string, startTime: string, endT
   if (!venueId || !startTime || !endTime) return [];
   const clashes = await findClashes(venueId, new Date(startTime), new Date(endTime));
   return clashes.map((c) => ({ id: c.id, eventName: c.eventName, club: c.club.name }));
+}
+
+export async function uploadRequirementFile(requirementId: string, fileName: string) {
+  await db.requestRequirement.update({
+    where: { id: requirementId },
+    data: { status: "UPLOADED", fileUrl: fileName },
+  });
+  revalidatePath("/requests/[id]", "page");
 }
