@@ -86,7 +86,7 @@ export function CalendarView({ requests, venues }: { requests: Req[]; venues: Ve
           </span>
         </div>
 
-        <Select value={venueFilter} onValueChange={setVenueFilter}>
+        <Select value={venueFilter} onValueChange={(v) => setVenueFilter(v ?? "")}>
           <SelectTrigger className="w-56 bg-white">
             <SelectValue placeholder="All venues">
               {venueFilter === "ALL" ? "All venues" : venues.find((v) => v.id === venueFilter)?.name}

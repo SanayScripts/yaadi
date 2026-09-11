@@ -47,7 +47,7 @@ export function ApprovalsView({ faculty, requirements }: { faculty: Faculty[]; r
   return (
     <div className="space-y-6">
       <div className="max-w-xs">
-        <Select value={facultyId} onValueChange={setFacultyId}>
+        <Select value={facultyId} onValueChange={(v) => setFacultyId(v ?? "")}>
           <SelectTrigger className="w-full bg-white">
             <SelectValue placeholder="I am...">
               {selectedFaculty ? `${selectedFaculty.name}${selectedFaculty.role === "PRINCIPAL" ? " (Principal)" : ""}` : "I am..."}

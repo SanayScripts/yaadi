@@ -23,10 +23,8 @@ export function ReportIssueDialog() {
 
   return (
     <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setSubmitted(false); }}>
-      <DialogTrigger asChild>
-        <button type="button" className="text-xs text-[#635BFF] hover:text-[#5147E0] font-medium">
-          Trouble logging in? Report it
-        </button>
+      <DialogTrigger className="text-xs text-[#635BFF] hover:text-[#5147E0] font-medium">
+        Trouble logging in? Report it
       </DialogTrigger>
       <DialogContent>
         {!submitted ? (

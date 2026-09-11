@@ -93,7 +93,7 @@ export function NewRequestForm({ clubs, venues, docRules, lockedClub }: { clubs:
               {lockedClub.name} <span className="text-[#8A98AC] text-xs">(your club)</span>
             </div>
           ) : (
-            <Select value={clubId} onValueChange={setClubId} required>
+            <Select value={clubId} onValueChange={(v) => setClubId(v ?? "")} required>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select club">
                   {selectedClub?.name ?? "Select club"}
@@ -114,7 +114,7 @@ export function NewRequestForm({ clubs, venues, docRules, lockedClub }: { clubs:
 
       <div className="space-y-1.5">
         <Label>Venue</Label>
-        <Select value={venueId} onValueChange={setVenueId} required>
+        <Select value={venueId} onValueChange={(v) => setVenueId(v ?? "")} required>
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Select venue">
               {selectedVenue ? `${selectedVenue.name}${selectedVenue.type === "AUDI" ? " (Auditorium)" : ""} — cap ${selectedVenue.capacity}` : "Select venue"}
@@ -160,7 +160,7 @@ export function NewRequestForm({ clubs, venues, docRules, lockedClub }: { clubs:
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label>Start Time</Label>
-              <Select value={startTimeOfDay} onValueChange={setStartTimeOfDay}>
+              <Select value={startTimeOfDay} onValueChange={(v) => setStartTimeOfDay(v ?? "")}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select time">
                     {TIME_OPTIONS.find((t) => t.value === startTimeOfDay)?.label ?? "Select time"}
@@ -175,7 +175,7 @@ export function NewRequestForm({ clubs, venues, docRules, lockedClub }: { clubs:
             </div>
             <div className="space-y-1.5">
               <Label>End Time</Label>
-              <Select value={endTimeOfDay} onValueChange={setEndTimeOfDay}>
+              <Select value={endTimeOfDay} onValueChange={(v) => setEndTimeOfDay(v ?? "")}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select time">
                     {TIME_OPTIONS.find((t) => t.value === endTimeOfDay)?.label ?? "Select time"}
