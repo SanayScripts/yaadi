@@ -2,17 +2,10 @@
 
 import { useState, useTransition } from "react";
 import { decideRequirement } from "@/app/requests/actions";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-type Faculty = { id: string; name: string; role: string };
+type Session = { id: string; name: string; role: "FACULTY" | "PRINCIPAL" };
 type Requirement = {
   id: string;
   label: string;
@@ -24,50 +17,29 @@ type Requirement = {
   facultyInChargeId: string;
 };
 
-export function ApprovalsView({ faculty, requirements }: { faculty: Faculty[]; requirements: Requirement[] }) {
-  const [facultyId, setFacultyId] = useState("");
+export function ApprovalsView({ session, requirements }: { session: Session; requirements: Requirement[] }) {
   const [decided, setDecided] = useState<Set<string>>(new Set());
   const [pending, startTransition] = useTransition();
 
-  const selectedFaculty = faculty.find((f) => f.id === facultyId);
-
   const visible = requirements.filter((r) => {
     if (decided.has(r.id)) return false;
-    if (!selectedFaculty) return false;
-    if (r.signerRole === "PRINCIPAL") return selectedFaculty.role === "PRINCIPAL";
-    if (r.signerRole === "FACULTY") return r.facultyInChargeId === selectedFaculty.id;
+    if (r.signerRole === "PRINCIPAL") return session.role === "PRINCIPAL";
+    if (r.signerRole === "FACULTY") return r.facultyInChargeId === session.id;
     return false;
   });
 
   function handleDecision(id: string, decision: "VERIFIED" | "REJECTED") {
     setDecided((prev) => new Set(prev).add(id));
-    startTransition(() => decideRequirement(id, facultyId, decision));
+    startTransition(() => decideRequirement(id, session.id, decision));
   }
 
   return (
     <div className="space-y-6">
-      <div className="max-w-xs">
-        <Select value={facultyId} onValueChange={(v) => setFacultyId(v ?? "")}>
-          <SelectTrigger className="w-full bg-white">
-            <SelectValue placeholder="I am...">
-              {selectedFaculty ? `${selectedFaculty.name}${selectedFaculty.role === "PRINCIPAL" ? " (Principal)" : ""}` : "I am..."}
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            {faculty.map((f) => (
-              <SelectItem key={f.id} value={f.id}>{f.name}{f.role === "PRINCIPAL" ? " (Principal)" : ""}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <p className="text-sm text-[#6B7C93]">
+        Reviewing as <span className="font-medium text-[#0A2540]">{session.name}</span>
+      </p>
 
-      {!selectedFaculty && (
-        <p className="text-sm text-[#6B7C93] border border-dashed border-[#E3E8EE] rounded-lg px-4 py-8 text-center">
-          Select who you are to see items awaiting your sign-off.
-        </p>
-      )}
-
-      {selectedFaculty && visible.length === 0 && (
+      {visible.length === 0 && (
         <p className="text-sm text-[#6B7C93] border border-dashed border-[#E3E8EE] rounded-lg px-4 py-8 text-center">
           Nothing pending your approval.
         </p>
